@@ -44,6 +44,15 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""59fa93f4-0fdb-4ddd-bbeb-3bbf90bdfbb2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -112,6 +121,17 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69b9e43d-0035-42da-985e-f8f17d91e057"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -178,6 +198,7 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
         m_InGame = asset.FindActionMap("InGame", throwIfNotFound: true);
         m_InGame_Movement = m_InGame.FindAction("Movement", throwIfNotFound: true);
         m_InGame_Jump = m_InGame.FindAction("Jump", throwIfNotFound: true);
+        m_InGame_Crouch = m_InGame.FindAction("Crouch", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
@@ -245,12 +266,14 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
     private IInGameActions m_InGameActionsCallbackInterface;
     private readonly InputAction m_InGame_Movement;
     private readonly InputAction m_InGame_Jump;
+    private readonly InputAction m_InGame_Crouch;
     public struct InGameActions
     {
         private @GameContorl m_Wrapper;
         public InGameActions(@GameContorl wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_InGame_Movement;
         public InputAction @Jump => m_Wrapper.m_InGame_Jump;
+        public InputAction @Crouch => m_Wrapper.m_InGame_Crouch;
         public InputActionMap Get() { return m_Wrapper.m_InGame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -266,6 +289,9 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnJump;
+                @Crouch.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnCrouch;
+                @Crouch.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnCrouch;
+                @Crouch.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnCrouch;
             }
             m_Wrapper.m_InGameActionsCallbackInterface = instance;
             if (instance != null)
@@ -276,6 +302,9 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Crouch.started += instance.OnCrouch;
+                @Crouch.performed += instance.OnCrouch;
+                @Crouch.canceled += instance.OnCrouch;
             }
         }
     }
@@ -350,6 +379,7 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

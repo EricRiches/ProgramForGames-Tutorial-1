@@ -11,11 +11,21 @@ public static class InputManager
 
         _gameControls.Permanent.Enable();
 
-        _gameControls.InGame.Movement.performed += jeff =>
+        _gameControls.InGame.Movement.performed += ctx =>
         {
-            myPlayer.SetMovementDirection(jeff.ReadValue<Vector3>());
+            myPlayer.SetMovementDirection(ctx.ReadValue<Vector3>());
         };
+
+        //call jumping function on player controller
+        _gameControls.InGame.Jump.performed += ctx => myPlayer.setIsJumping();
+
+        //call crouching function on player controller
+        _gameControls.InGame.Crouch.performed += ctx => myPlayer.setIsCrouching();
+
+
+        SetGameControls();
     }
+
 
     public static void SetGameControls()
     {
