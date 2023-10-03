@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
@@ -13,7 +14,11 @@ public class Player : MonoBehaviour
     bool isCrouching = false;
 
     Rigidbody rb;
+    public GameObject projectile;
+    public Transform projectilePos;
 
+    public int Score = 0;
+    public TMP_Text scoreText;
 
     // Start is called before the first frame update
     void Start()
@@ -62,5 +67,17 @@ public class Player : MonoBehaviour
         _moveDirection = currentDirection;
     }
     
+    public void shoot()
+    {
+        Rigidbody rbBullet = Instantiate(projectile, projectilePos.position, Quaternion.identity).GetComponent<Rigidbody>();
+        rbBullet.AddForce(Vector3.forward * 32f, ForceMode.Impulse);
+    }
+
+    public void UpdateScore()
+    {
+        Score = Score + 1;
+        scoreText.text = "Score: " + Score;
+        Debug.Log("yes");
+    }
 
 }

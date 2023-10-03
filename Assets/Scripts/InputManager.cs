@@ -22,6 +22,8 @@ public static class InputManager
         //call crouching function on player controller
         _gameControls.InGame.Crouch.performed += ctx => myPlayer.setIsCrouching();
 
+        _gameControls.InGame.Shoot.performed += ctx => myPlayer.shoot();
+
 
         SetGameControls();
     }
