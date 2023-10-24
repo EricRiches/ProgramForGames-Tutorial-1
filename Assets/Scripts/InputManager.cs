@@ -24,6 +24,8 @@ public static class InputManager
 
         _gameControls.InGame.Shoot.performed += ctx => myPlayer.shoot();
 
+        _gameControls.InGame.Reload.performed += ctx => myPlayer.Reload();
+
 
         SetGameControls();
     }

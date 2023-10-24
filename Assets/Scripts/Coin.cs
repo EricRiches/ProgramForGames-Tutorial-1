@@ -10,7 +10,7 @@ public class Coin : MonoBehaviour
 
     private void Awake()
     {
-        coin = new Collectibles("coin", 1, 0);
+        coin = new Collectibles("coin", 1, 0, 0);
     }
 
     private void OnCollisionEnter(Collision other)

@@ -71,6 +71,15 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""dcfbc6fc-3d96-439a-ba4e-9e26febd6169"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,17 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
                     ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1ba764e6-2e9b-4034-bbb0-88f0976e7fa0"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -241,6 +261,7 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
         m_InGame_Crouch = m_InGame.FindAction("Crouch", throwIfNotFound: true);
         m_InGame_Look = m_InGame.FindAction("Look", throwIfNotFound: true);
         m_InGame_Shoot = m_InGame.FindAction("Shoot", throwIfNotFound: true);
+        m_InGame_Reload = m_InGame.FindAction("Reload", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
@@ -311,6 +332,7 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
     private readonly InputAction m_InGame_Crouch;
     private readonly InputAction m_InGame_Look;
     private readonly InputAction m_InGame_Shoot;
+    private readonly InputAction m_InGame_Reload;
     public struct InGameActions
     {
         private @GameContorl m_Wrapper;
@@ -320,6 +342,7 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
         public InputAction @Crouch => m_Wrapper.m_InGame_Crouch;
         public InputAction @Look => m_Wrapper.m_InGame_Look;
         public InputAction @Shoot => m_Wrapper.m_InGame_Shoot;
+        public InputAction @Reload => m_Wrapper.m_InGame_Reload;
         public InputActionMap Get() { return m_Wrapper.m_InGame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -344,6 +367,9 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
                 @Shoot.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnShoot;
                 @Shoot.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnShoot;
                 @Shoot.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnShoot;
+                @Reload.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnReload;
+                @Reload.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnReload;
+                @Reload.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnReload;
             }
             m_Wrapper.m_InGameActionsCallbackInterface = instance;
             if (instance != null)
@@ -363,6 +389,9 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
             }
         }
     }
@@ -440,6 +469,7 @@ public partial class @GameContorl : IInputActionCollection2, IDisposable
         void OnCrouch(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

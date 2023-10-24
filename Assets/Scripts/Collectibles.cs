@@ -10,16 +10,24 @@ public class Collectibles : MonoBehaviour
 
     public int restoreHp;
 
-    public Collectibles(string name, int scoreValue, int restoreHPvalue)
+    public int restoreAmmo;
+
+    public Collectibles(string name, int scoreValue, int restoreHPvalue, int ammoRestore)
     {
         this.nameCollectible = name;
         this.score = score = scoreValue;
         this.restoreHp = restoreHPvalue;
+        this.restoreAmmo = ammoRestore;
     }
 
     public void UpdateScore()
     {
         ScoreManager.scoreManager.UpdateScore(score);
+    }
+
+    public void UpdateAmmo()
+    {
+        Player.player.UpdateAmmo(restoreAmmo);
     }
 
     public void UpdateHealth()

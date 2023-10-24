@@ -2,12 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Player : MonoBehaviour
 {
+    public static Player player;
+
     [SerializeField] private float speed;
     private Vector3 _moveDirection;
-    
+
+    public int MaxAmmo = 120;
+    public int AmmoBag = 60;
+    private int AmmoBagStore = 0;
+    public int AmmoLoaded = 30;
+    public int MagSize = 30;
+
     public Vector3 jump;
     public float jumpForce = 2.0f;
     bool isGrounded;
@@ -17,15 +27,24 @@ public class Player : MonoBehaviour
     public GameObject projectile;
     public Transform projectilePos;
 
-    //public int Score = 0;
-    //public TMP_Text scoreText;
+    
+    public TMP_Text AmmoLoadedText;
+    public TMP_Text AmmoBagText;
 
-    // Start is called before the first frame update
+    
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         InputManager.Init(this);
         InputManager.SetGameControls();
+    }
+
+    private void Awake()
+    {
+        if (player == null)
+        {
+            player = this;
+        }
     }
 
     // Update is called once per frame
@@ -69,9 +88,61 @@ public class Player : MonoBehaviour
     
     public void shoot()
     {
-        Rigidbody rbBullet = Instantiate(projectile, projectilePos.position, Quaternion.identity).GetComponent<Rigidbody>();
-        rbBullet.AddForce(Vector3.forward * 32f, ForceMode.Impulse);
+
+        if (AmmoLoaded > 0)
+        {
+            Rigidbody rbBullet = Instantiate(projectile, projectilePos.position, Quaternion.identity).GetComponent<Rigidbody>();
+            rbBullet.AddForce(Vector3.forward * 32f, ForceMode.Impulse);
+
+            AmmoLoaded = AmmoLoaded - 1;
+            AmmoLoadedText.text = "Ammo: " + AmmoLoaded + "/" + MagSize; 
+        }
     }
+
+    public void Reload()
+    {
+        if (AmmoLoaded < MagSize && AmmoBag > 0)
+        {
+            AmmoBagStore = AmmoBag;
+            AmmoBag = AmmoBag - (MagSize - AmmoLoaded);
+            if (AmmoBag < 0)
+            {
+                AmmoBag = 0;
+            }
+            if (AmmoBagStore >= MagSize)
+            {
+                AmmoLoaded = MagSize;
+
+            } 
+            else if(AmmoBagStore + AmmoLoaded >= MagSize)
+            {
+                AmmoLoaded = MagSize;
+            }
+            else
+            {
+                AmmoLoaded = AmmoLoaded + AmmoBagStore;
+            }
+
+            
+
+            AmmoLoadedText.text = "Ammo: " + AmmoLoaded + "/" + MagSize;
+            AmmoBagText.text = AmmoBag + " / " + MaxAmmo;
+        }
+    }
+    
+    public void UpdateAmmo(int ammoAmount)
+    {
+        if (AmmoBag + ammoAmount > MaxAmmo)
+        {
+            AmmoBag = MaxAmmo;
+        }
+        else
+        {
+            AmmoBag = AmmoBag + ammoAmount;
+        }
+        AmmoBagText.text = AmmoBag + " / " + MaxAmmo;
+    }
+
 
     /*public void UpdateScore()
     {
